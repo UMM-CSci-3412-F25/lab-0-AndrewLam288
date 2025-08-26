@@ -4,13 +4,12 @@
 
 set -euo pipefail
 
-# require exactly one argument
-if [[ $# -ne 1 ]]; then
-  echo "usage: $0 <number>" >&2
+# allow 0 or 1 arg; default to 17 when none is given (for CI sample-run)
+if [[ $# -gt 1 ]]; then
+  echo "usage: $0 [number]" >&2
   exit 1
 fi
-
-arg="$1"
+arg="${1:-17}"
 
 # extract .tgz in one step (keeps NthPrime.tgz intact)
 tar -xzf NthPrime.tgz
