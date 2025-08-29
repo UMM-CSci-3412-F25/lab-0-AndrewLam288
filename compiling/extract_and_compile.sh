@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
-# extract_and_compile.sh — extract NthPrime.tgz, build, and run NthPrime <N>
+# Build and run NthPrime from NthPrime.tgz
 set -euo pipefail
 
-# 0 or 1 arg; default to 17 for CI sample-run
 if [[ $# -gt 1 ]]; then
   echo "usage: $0 [number]" >&2
   exit 1
 fi
-arg="${1:-17}"
+N="${1:-17}"
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-archive="$script_dir/NthPrime.tgz"
+# find the archive next to this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ARCHIVE="$SCRIPT_DIR/NthPrime.tgz"
+[[ -f "$ARCHIVE" ]] || { echo "archive not found: $ARCHIVE" >&2; exit 1; }
 
-tar -xzf "$archive" -C "$script_dir"
-
-cd "$script_dir/NthPrime"
-gcc -Wall -Wextra -O2 -o NthPrime main.c nth_prime.c
-./NthPrime "$arg"
-
+# extract (keep .tgz), build, run
+tar -xzf "$ARCHIVE" -C "$SCRIPT_DIR"
+cd "$SCRIPT_DIR/NthPrime"
+gcc -O2 -Wall -Wextra -o NthPrime main.c nth_prime.c
+./NthPrime "$N"
 
